@@ -31,6 +31,7 @@ namespace DockerTutorial
                         services.AddSingleton(config);
                     })
                     .UseStartup<Startup>()
+                    .UseUrls($"http://*:5000")
                     .UseSerilog()
                     .Build()
                     .Run();
