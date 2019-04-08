@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
 using DockerTutorial.Infrastructure.Config;
+using DockerTutorial.Infrastructure.Database;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,15 @@ namespace DockerTutorial
         private static readonly ILogger Logger = Log.ForContext<Program>();
 
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
                 var config = Configuration.Read();
-
+                
                 ConfigureLogger(config);
+
+                await DatabaseCreator.CreateDatabaseAndTableIfNotExists(config.GetSection("Database").Get<DatabaseConfig>());
                 
                 WebHost.CreateDefaultBuilder()
                     .ConfigureServices(services =>
