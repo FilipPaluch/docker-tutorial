@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+
+  db:
+    image: postgres:10.5 
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: DockerTutorial
+    ports:
+      - "5432:5432"
+    volumes:
+      - docker-tutorial-postgres-data:/var/lib/postgresql/data
+
+  dockertutorial:
+    build: ../../src
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment: 
+      Database__ConnectionString: host=db;port=5432;database=DockerTutorial;password=password;username=postgres
+    depends_on: 
+      - db
+
+volumes:
+  docker-tutorial-postgres-data:
